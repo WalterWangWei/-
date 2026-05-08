@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>今天Thrives主题 v2</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      background: linear-gradient(180deg, #87ceeb 0%, #b3e5fc 55%, #ffffff 100%);
+      overflow: hidden;
+      position: relative;
+    }
+    .sky {
+      position: absolute;
+      inset: 0;
+      z-index: 0;
+      overflow: hidden;
+    }
+    .sun {
+      position: absolute;
+      top: 40px;
+      right: 40px;
+      width: 120px;
+      height: 120px;
+      background: radial-gradient(circle at 30% 30%, #fff7a8, #ffd54f 55%, #ffb300 100%);
+      border-radius: 50%;
+      box-shadow: 0 0 120px rgba(255, 214, 0, 0.5);
+    }
+    .cloud {
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      opacity: 0.95;
+    }
+    .cloud::before,
+    .cloud::after {
+      content: '';
+      position: absolute;
+      background: #ffffff;
+      border-radius: 50%;
+    }
+    .cloud1 {
+      top: 80px;
+      left: 60px;
+      width: 160px;
+      height: 60px;
+    }
+    .cloud1::before {
+      top: -25px;
+      left: 20px;
+      width: 70px;
+      height: 70px;
+    }
+    .cloud1::after {
+      top: -15px;
+      left: 70px;
+      width: 80px;
+      height: 80px;
+    }
+    .cloud2 {
+      top: 150px;
+      right: 120px;
+      width: 140px;
+      height: 50px;
+    }
+    .cloud2::before {
+      top: -20px;
+      left: 20px;
+      width: 60px;
+      height: 60px;
+    }
+    .cloud2::after {
+      top: -15px;
+      left: 70px;
+      width: 70px;
+      height: 70px;
+    }
+    .tree {
+      position: absolute;
+      bottom: 0;
+      left: 40px;
+      width: 160px;
+      height: 260px;
+      z-index: 0;
+    }
+    .tree-trunk {
+      position: absolute;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 40px;
+      height: 140px;
+      background: #8b5a2b;
+      border-radius: 20px;
+      box-shadow: inset -4px 0 0 rgba(0, 0, 0, 0.15);
+    }
+    .tree-top {
+      position: absolute;
+      bottom: 120px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 220px;
+      height: 180px;
+      background: radial-gradient(circle at 45% 35%, #a8e063, #95d840 40%, #47910b 100%);
+      border-radius: 50%;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+    }
+    .container {
+      position: relative;
+      z-index: 1;
+      background: rgba(255, 255, 255, 0.92);
+      padding: 24px;
+      border-radius: 18px;
+      box-shadow: 0 12px 34px rgba(0, 0, 0, 0.14);
+      text-align: center;
+      width: min(420px, 95vw);
+    }
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #0078d4;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005a9e;
+    }
+    .result {
+      margin-top: 18px;
+      font-size: 32px;
+      font-weight: bold;
+      color: #333;
+      min-height: 48px;
+    }
+    .status {
+      margin-top: 10px;
+      color: #555;
+      font-size: 14px;
+    }
+    .history {
+      margin-top: 24px;
+      text-align: left;
+    }
+    .history h2 {
+      font-size: 18px;
+      margin-bottom: 10px;
+    }
+    .history ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+    .history li {
+      padding: 10px 12px;
+      border-bottom: 1px solid #ececec;
+      font-size: 15px;
+    }
+    .history li:first-child {
+      border-top: 1px solid #ececec;
+    }
+  </style>
+</head>
+<body>
+  <div class="sky">
+    <div class="sun"></div>
+    <div class="cloud cloud1"></div>
+    <div class="cloud cloud2"></div>
+    <div class="tree">
+      <div class="tree-trunk"></div>
+      <div class="tree-top"></div>
+    </div>
+  </div>
+  <div class="container">
+    <h1>今天的Thrives主题是</h1>
+    <button id="generateBtn">生成主题</button>
+    <div class="result" id="result">?</div>
+    <div class="status" id="statusText">当前循环：第 1 轮，剩余 7 个主题。</div>
+
+    <div class="history">
+      <h2>历史记录</h2>
+      <ul id="historyList"></ul>
+    </div>
+  </div>
+
+  <script>
+    const resultEl = document.getElementById('result');
+    const generateBtn = document.getElementById('generateBtn');
+    const statusText = document.getElementById('statusText');
+    const historyList = document.getElementById('historyList');
+
+    const themes = [
+      'T - Tango 跳舞',
+      'H - Heart 有氧',
+      'R - Reason 哲学',
+      'I - Income 投资',
+      'V - Vitality 力量',
+      'E - EFT 心理咨询',
+      'S - Synthesis 融合'
+    ];
+
+    const STORAGE_KEY = 'thrivesV2State';
+
+    function shuffle(array) {
+      const copy = array.slice();
+      for (let i = copy.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [copy[i], copy[j]] = [copy[j], copy[i]];
+      }
+      return copy;
+    }
+
+    function createNewQueue() {
+      return shuffle(themes);
+    }
+
+    function loadState() {
+      const raw = localStorage.getItem(STORAGE_KEY);
+      if (!raw) {
+        return {
+          queue: createNewQueue(),
+          history: [],
+          cycleNumber: 1,
+          lastTheme: '?'
+        };
+      }
+
+      try {
+        const parsed = JSON.parse(raw);
+        return {
+          queue: Array.isArray(parsed.queue) && parsed.queue.length ? parsed.queue : createNewQueue(),
+          history: Array.isArray(parsed.history) ? parsed.history : [],
+          cycleNumber: typeof parsed.cycleNumber === 'number' && parsed.cycleNumber > 0 ? parsed.cycleNumber : 1,
+          lastTheme: typeof parsed.lastTheme === 'string' ? parsed.lastTheme : '?'
+        };
+      } catch (error) {
+        return {
+          queue: createNewQueue(),
+          history: [],
+          cycleNumber: 1,
+          lastTheme: '?'
+        };
+      }
+    }
+
+    function saveState() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
+    }
+
+    function updateUI() {
+      resultEl.textContent = state.lastTheme;
+      const remaining = state.queue.length;
+      statusText.textContent = `当前循环：第 ${state.cycleNumber} 轮，剩余 ${remaining} 个主题。`;
+      historyList.innerHTML = '';
+      state.history.forEach((item, index) => {
+        const li = document.createElement('li');
+        li.textContent = `${state.history.length - index}. ${item}`;
+        historyList.appendChild(li);
+      });
+    }
+
+    function pickNextTheme() {
+      if (state.queue.length === 0) {
+        state.queue = createNewQueue();
+        state.cycleNumber += 1;
+        state.history = [];
+      }
+      return state.queue.shift();
+    }
+
+    const state = loadState();
+    updateUI();
+
+    generateBtn.addEventListener('click', () => {
+      const nextTheme = pickNextTheme();
+      state.lastTheme = nextTheme;
+      state.history.unshift(nextTheme);
+      state.history = state.history.slice(0, 7);
+      saveState();
+      updateUI();
+    });
+  </script>
+</body>
+</html>
