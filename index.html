@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>随机数生成器</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+      background: #f5f5f5;
+    }
+    .container {
+      background: #fff;
+      padding: 24px;
+      border-radius: 12px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
+      text-align: center;
+      width: min(360px, 90vw);
+    }
+    button {
+      font-size: 18px;
+      padding: 12px 24px;
+      border: none;
+      border-radius: 8px;
+      background: #0078d4;
+      color: white;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #005a9e;
+    }
+    .result {
+      margin-top: 20px;
+      font-size: 36px;
+      font-weight: bold;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>今天的Thrives主题是</h1>
+    <p>按下按钮，随机显示今天的主题。</p>
+    <button id="generateBtn">生成主题</button>
+    <div class="result" id="result">?</div>
+  </div>
+
+  <script>
+    const resultEl = document.getElementById('result');
+    const generateBtn = document.getElementById('generateBtn');
+
+    function getRandomTheme() {
+      const themes = [
+        'T - Tango 跳舞',
+        'H - Heart 有氧',
+        'R - Reason 哲学',
+        'I - Income 投资',
+        'V - Vitality 力量',
+        'E - EFT 心理咨询',
+        'S - Synthesis 融合'
+      ];
+      return themes[Math.floor(Math.random() * themes.length)];
+    }
+
+    generateBtn.addEventListener('click', () => {
+      const randomTheme = getRandomTheme();
+      resultEl.textContent = randomTheme;
+    });
+  </script>
+</body>
+</html>
